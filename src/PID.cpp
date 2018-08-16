@@ -27,6 +27,17 @@ void PID::UpdateError(double cte) {
 
 double PID::TotalError() {
   double t_error = p_error + i_error + d_error;
+  
+  /*
+  if (t_error > 0.2) {
+    double[] p = [Kp, Kd, Ki];
+    double[] dp = [1.0, 1.0, 1.0];
+      for (int i=0; i<p.size(); i++) {
+        p[i] += dp[i];
+      }
+  }
+  */
+  
   return t_error;
 }
 
