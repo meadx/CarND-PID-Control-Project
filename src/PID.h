@@ -9,6 +9,7 @@ public:
   double p_error;
   double i_error;
   double d_error;
+  double b_error; // for twiddle
 
   /*
   * Coefficients
@@ -16,7 +17,10 @@ public:
   double Kp;
   double Ki;
   double Kd;
-
+  vector<double> dp; // for twiddle
+  int step; // for twiddle
+  int iter; // for twiddle
+  
   /*
   * Constructor
   */
@@ -41,6 +45,8 @@ public:
   * Calculate the total PID error.
   */
   double TotalError();
-};
+
+  // Twiddle
+  void Twiddle();
 
 #endif /* PID_H */
