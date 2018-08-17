@@ -19,12 +19,13 @@ void PID::Init(double Kp, double Ki, double Kd) {
   d_error = 0.0;
   
   // for twiddle
-  for (int i = 0; i<3; i++){
-    dp.push_back(1.0); 
-  }
+  dp.push_back(Kp/10); 
+  dp.push_back(Ki/10);
+  dp.push_back(Kd/10);
   step = 1;
   b_error = 0.0;
   iter = 0;
+  n = 50;
 }
 
 void PID::UpdateError(double cte) {
@@ -35,7 +36,6 @@ void PID::UpdateError(double cte) {
 
 double PID::TotalError() {
   double t_error = p_error + i_error + d_error;
-  }
   
   return t_error;
 }
@@ -43,15 +43,15 @@ double PID::TotalError() {
 void PID::Twiddle() {
   vector<double> p;
   p.push_back(Kp);
-  p.push_back(Kd);
   p.push_back(Ki);
+  p.push_back(Kd);
   
   if (step == 1) {
     b_error = TotalError();
     p[iter] += dp[iter];
     Kp = p[0];
-      Kd = p[1];
-      Ki = p[2];
+    Ki = p[1];
+    Kd = p[2];
     step = 2;
   }
   else if (step == 2) {
@@ -68,8 +68,8 @@ void PID::Twiddle() {
     else {
       p[iter] -= 2 * dp[iter];
       Kp = p[0];
-      Kd = p[1];
-      Ki = p[2];
+      Ki = p[1];
+      Kd = p[2];
       step = 3;
     }
   }
@@ -85,11 +85,11 @@ void PID::Twiddle() {
       }
     }
     else {
-      p[i] += dp[i];
+      p[iter] += dp[iter];
       Kp = p[0];
-      Kd = p[1];
-      Ki = p[2];
-      dp[i] *= 0.9;
+      Ki = p[1];
+      Kd = p[2];
+      dp[iter] *= 0.9;
       step = 1;
       iter += 1;
       if (iter == 3) {

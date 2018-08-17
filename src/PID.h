@@ -1,5 +1,6 @@
 #ifndef PID_H
 #define PID_H
+#include <vector>
 
 class PID {
 public:
@@ -17,10 +18,10 @@ public:
   double Kp;
   double Ki;
   double Kd;
-  vector<double> dp; // for twiddle
+  std::vector<double> dp; // for twiddle
   int step; // for twiddle
   int iter; // for twiddle
-  
+  int n; // for twiddle 
   /*
   * Constructor
   */
@@ -49,4 +50,5 @@ public:
   // Twiddle
   void Twiddle();
 
+};
 #endif /* PID_H */
