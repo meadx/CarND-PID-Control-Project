@@ -1,4 +1,5 @@
 #include "PID.h"
+#include <cmath>
 
 using namespace std;
 
@@ -19,9 +20,9 @@ void PID::Init(double Kp, double Ki, double Kd) {
   d_error = 0.0;
   
   // for twiddle
-  dp.push_back(Kp/10); 
-  dp.push_back(Ki/10);
-  dp.push_back(Kd/10);
+  dp.push_back(Kp/100); 
+  dp.push_back(Ki/100);
+  dp.push_back(Kd/100);
   step = 1;
   b_error = 0.0;
   iter = 0;
@@ -36,7 +37,7 @@ void PID::UpdateError(double cte) {
 
 double PID::TotalError() {
   double t_error = p_error + i_error + d_error;
-  
+  t_error = abs(t_error);
   return t_error;
 }
 
@@ -58,7 +59,7 @@ void PID::Twiddle() {
     double t_error = TotalError();
     if ( t_error < b_error ) {
       b_error = t_error;
-      dp[iter] *= 1.1;
+      dp[iter] *= 1.01;
       step = 1;
       iter += 1;
       if (iter == 3) {
@@ -77,7 +78,7 @@ void PID::Twiddle() {
     double t_error = TotalError();
     if ( t_error < b_error ) {
       b_error = t_error;
-      dp[iter] *= 1.1;
+      dp[iter] *= 1.01;
       step = 1;
       iter += 1;
       if (iter == 3) {
@@ -89,7 +90,7 @@ void PID::Twiddle() {
       Kp = p[0];
       Ki = p[1];
       Kd = p[2];
-      dp[iter] *= 0.9;
+      dp[iter] *= 0.99;
       step = 1;
       iter += 1;
       if (iter == 3) {
